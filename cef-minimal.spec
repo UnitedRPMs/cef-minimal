@@ -2,18 +2,18 @@
 %define debug_package %{nil}
 %global _hardened_build 1
 
-%global _commit gb382c62
-%global _chromiumver 81.0.4044.113
+%global _commit gc81164e
+%global _chromiumver 75.0.3770.100
 %global _url_gver %{version}_%{_commit}_chromium-%{_chromiumver}
 
 Name: cef-minimal
 Summary: Chromium Embedded Framework minimal release
-Version: 81.2.17
+Version: 75.1.14
 Release: 1%{?dist}
 URL: https://bitbucket.org/chromiumembedded/cef/
 Group: System Environment/Libraries
 # Source from http://opensource.spotify.com/cefbuilds/index.html (renamed and uploaded in git repo for an easy download)
-Source: https://github.com/UnitedRPMs/cef-minimal/releases/download/%{version}/cef_binary_%{_url_gver}_linux64_minimal.tar.bz2
+Source: https://github.com/kuboosoft/cef-minimal/releases/download/%{version}/cef_binary_%{_url_gver}_linux64_minimal.tar.bz2
 License: BSD
 BuildRequires: cmake
 BuildRequires: gcc-c++
@@ -51,5 +51,5 @@ popd
 
 %changelog
 
-* Sat Apr 18 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 81.2.17-1 
+* Sat Apr 18 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 75.1.14-1 
 - initial RPM
