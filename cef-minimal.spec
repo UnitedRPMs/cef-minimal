@@ -2,18 +2,23 @@
 %define debug_package %{nil}
 %global _hardened_build 1
 
-%global _commit gc81164e
-%global _chromiumver 75.0.3770.100
-%global _url_gver %{version}_%{_commit}_chromium-%{_chromiumver}
+%global _commit ge484012
+%global _chromiumver 88.0.4324.150
+%global cdn_build_package_url https://cef-builds.spotifycdn.com
+%global _url_pkgver %{version}%2B%{_commit}%2Bchromium-%{_chromiumver}
+
+# Reduce compression level and build time
+%define _source_payload w5.gzdio
+%define _binary_payload w5.gzdio
+
 
 Name: cef-minimal
 Summary: Chromium Embedded Framework minimal release
-Version: 75.1.14
+Version: 88.2.8
 Release: 2%{?dist}
 URL: https://bitbucket.org/chromiumembedded/cef/
 Group: System Environment/Libraries
-# Source from http://opensource.spotify.com/cefbuilds/index.html (renamed and uploaded in git repo for an easy download)
-Source: https://github.com/kuboosoft/cef-minimal/releases/download/%{version}/cef_binary_%{_url_gver}_linux64_minimal.tar.bz2
+Source:	%{cdn_build_package_url}/cef_binary_%{_url_pkgver}_linux64_minimal.tar.bz2
 License: BSD
 BuildRequires: cmake
 BuildRequires: gcc-c++
@@ -25,6 +30,7 @@ Chromium Embedded Framework minimal release.
 %prep
 %autosetup -n cef_binary_%{version}+%{_commit}+chromium-%{_chromiumver}_linux64_minimal
 cp -rf %{_builddir}/cef_binary_%{version}+%{_commit}+chromium-%{_chromiumver}_linux64_minimal %{_builddir}/cef_binary_static
+
 %build
     sed -i 's/-Werror/#-Werror/g' cmake/cef_variables.cmake
 # Static build
@@ -57,6 +63,9 @@ popd
 /opt/cef/
 
 %changelog
+
+* Mon Apr 12 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 88.2.8-2
+- Updated to 88.2.8
 
 * Mon Sep 28 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 75.1.14-2
 - Rebuilt 
