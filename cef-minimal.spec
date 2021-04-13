@@ -32,20 +32,24 @@ Chromium Embedded Framework minimal release.
 cp -rf %{_builddir}/cef_binary_%{version}+%{_commit}+chromium-%{_chromiumver}_linux64_minimal %{_builddir}/cef_binary_static
 
 %build
+mkdir -p build
     sed -i 's/-Werror/#-Werror/g' cmake/cef_variables.cmake
 # Static build
     #cmake -G "Ninja" -DPROJECT_ARCH="x86_64" -DCMAKE_BUILD_TYPE=Release -Wno-dev .
-    %cmake -Wno-dev .
-    pushd %{_target_platform}
-    make libcef_dll_wrapper
-# static build
-pushd %{_builddir}/cef_binary_static
-    %cmake -DBUILD_SHARED_LIBS:BOOL=OFF -Wno-dev .
-    pushd %{_target_platform}
+    %cmake -Wno-dev -B build
+    pushd build
     make libcef_dll_wrapper
     popd
+# static build
+mkdir -p %{_builddir}/cef_binary_static/build
+ pushd %{_builddir}/cef_binary_static/
+    %cmake -DBUILD_SHARED_LIBS:BOOL=OFF -Wno-dev -B build
+    pushd build
+    make libcef_dll_wrapper
+    popd
+      popd
     
-   cp -f %{_builddir}/cef_binary_static/%{_target_platform}/libcef_dll_wrapper/libcef_dll_wrapper.a %{_builddir}/cef_binary_%{version}+%{_commit}+chromium-%{_chromiumver}_linux64_minimal/%{_target_platform}/libcef_dll_wrapper/
+   cp -f %{_builddir}/cef_binary_static/build/libcef_dll_wrapper/libcef_dll_wrapper.a %{_builddir}/cef_binary_%{version}+%{_commit}+chromium-%{_chromiumver}_linux64_minimal/build/libcef_dll_wrapper/
 
 %install
 mkdir -p %{buildroot}/opt/cef/
@@ -54,7 +58,7 @@ pushd %{buildroot}/opt/cef/Release/
 ln -sf /opt/cef/libcef_dll_wrapper/libcef_dll_wrapper.so  libcef_dll_wrapper.so
 ln -sf /opt/cef/libcef_dll_wrapper/libcef_dll_wrapper.a libcef_dll_wrapper.a
 popd
- mv -f %{buildroot}/opt/cef/%{_target_platform}/libcef_dll_wrapper %{buildroot}/opt/cef/libcef_dll_wrapper && rm -rf %{buildroot}/opt/cef/%{_target_platform}
+ mv -f %{buildroot}/opt/cef/build/libcef_dll_wrapper %{buildroot}/opt/cef/libcef_dll_wrapper && rm -rf %{buildroot}/opt/cef/build
  
  rm -rf %{buildroot}/opt/cef/libcef_dll_wrapper/CMakeFiles/
   rm -f %{buildroot}/opt/cef/libcef_dll_wrapper/MakeFile
