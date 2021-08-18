@@ -11,18 +11,24 @@
 %define _source_payload w5.gzdio
 %define _binary_payload w5.gzdio
 
+%global _build_id_links none
+%undefine __brp_check_rpaths
+%global __brp_check_rpaths %{nil}
+
 
 Name: cef-minimal
 Summary: Chromium Embedded Framework minimal release
 Version: 88.2.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: https://bitbucket.org/chromiumembedded/cef/
 Group: System Environment/Libraries
 Source:	%{cdn_build_package_url}/cef_binary_%{_url_pkgver}_linux64_minimal.tar.bz2
 License: BSD
 BuildRequires: cmake
 BuildRequires: gcc-c++
+BuildRequires: chrpath
 #BuildRequires: ninja-build
+Requires:      expat
 
 %description
 Chromium Embedded Framework minimal release.
@@ -43,7 +49,7 @@ mkdir -p build
 # static build
 mkdir -p %{_builddir}/cef_binary_static/build
  pushd %{_builddir}/cef_binary_static/
-    %cmake -DBUILD_SHARED_LIBS:BOOL=OFF -Wno-dev -B build
+    %cmake -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_SKIP_RPATH=1 -Wno-dev -B build
     pushd build
     make libcef_dll_wrapper
     popd
@@ -62,11 +68,16 @@ popd
  
  rm -rf %{buildroot}/opt/cef/libcef_dll_wrapper/CMakeFiles/
   rm -f %{buildroot}/opt/cef/libcef_dll_wrapper/MakeFile
+  
+chrpath --delete %{buildroot}/opt/cef/libcef_dll_wrapper/libcef_dll_wrapper.so
 
 %files
 /opt/cef/
 
 %changelog
+
+* Thu Aug 12 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 88.2.8-3
+- Rebuilt
 
 * Mon Apr 12 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 88.2.8-2
 - Updated to 88.2.8
