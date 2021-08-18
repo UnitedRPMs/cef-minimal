@@ -28,5 +28,5 @@ jobs:
       # Runs a single command using the runners shell
       - name: build
         run: |
-           docker run -v $(pwd):/root/enjoy --cap-add=SYS_ADMIN davidva/unibuild-34 /bin/sh -c "rm -f urpms && wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms && /urpms -g UnitedRPMs/cef-minimal -s cef-minimal.spec -t unitedrpms-35-x86_64"
+           docker run -v $(pwd):/root/enjoy --cap-add=SYS_ADMIN davidva/unibuild-34 /bin/sh -c "rm -f urpms && wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms && /urpms -g UnitedRPMs/cef-minimal -s cef-minimal.spec -t unitedrpms-34-x86_64"
 
